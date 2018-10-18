@@ -10,4 +10,6 @@ Base of these configs is [voidrice](https://github.com/LukeSmithxyz/voidrice) So
 
 # "Dependencies" and programs used
 
-I recomend using this with [TARBS](https://github.com/allbombson/TARBS/)
+Programs used to install files: [TARBS](https://github.com/allbombson/TARBS/)
+
+Dependencies on the other hand [can be found here](https://github.com/allbombson/TARBS/blob/master/progs.csv)
