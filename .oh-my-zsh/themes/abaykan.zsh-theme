@@ -37,7 +37,7 @@ print -P $g_date
 local g_changes="$FG[038][%c]%{$reset_color%}"
 # Define prompts
 #
-PROMPT='${g_status}${g_changes} $(git_prompt_info)'
+PROMPT="$fg[cyan]%n$fg[red]@$fg[blue]%m$fg[green]$ $fg[white]"
 
 # git
 ZSH_THEME_GIT_PROMPT_PREFIX="%{$fg_bold[cyan]%}git:(%{$fg[red]%}"
