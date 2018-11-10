@@ -1,6 +1,5 @@
 # vim: filetype=i3
-# 
-#
+
 # File originally by Luke Smith
 # Website: http://lukesmith.xyz
 # Email: luke@lukesmith.xyz
@@ -16,7 +15,6 @@
 # #---Basic Definitions---# #
 # Needed for i3-gaps
 #for_window [class="^.*"] border pixel 2
-#for_windows [class="^.*"] border none
 gaps inner 15
 gaps outer -15
 set $term --no-startup-id $TERMINAL
@@ -27,15 +25,33 @@ set $reboot sudo -A reboot
 set $netrefresh --no-startup-id sudo -A systemctl restart NetworkManager
 set $hibernate sudo -A systemctl suspend
 
+# #---Dropdown Windows---# #
+
+# First I have a tmux window used for background scripts.
+# I'll later bind this to mod+u.
+for_window [instance="tmuxdd"] floating enable
+for_window [instance="tmuxdd"] resize set 625 400
+for_window [instance="tmuxdd"] move scratchpad
+for_window [instance="tmuxdd"] border pixel 3
+for_window [instance="tmuxdd"] sticky enable
+
+# Then I have a window running R I use for basic arithmetic
+# I'll later bind this to mod+a.
+for_window [instance="dropdowncalc"] floating enable
+for_window [instance="dropdowncalc"] resize set 800 300
+for_window [instance="dropdowncalc"] move scratchpad
+for_window [instance="dropdowncalc"] border pixel 2
+for_window [instance="dropdowncalc"] sticky enable
+
 # #---Starting External Scripts---# #
 # Setting the background and colorscheme:
 exec --no-startup-id wal -i ~/.config/wall.png >/dev/null
 # Starts dunst for notifications:
 exec --no-startup-id dunst
 # Composite manager:
-exec --no-startup-id compton
+exec --no-startup-id xcompmgr
 # Runs the key remapping scripts
-exec --no-startup-id ~/.scripts/remaps
+exec --no-startup-id remaps
 # Unclutter makes the mouse invisible after a brief period
 exec --no-startup-id unclutter
 # Run the script to update the mpd i3block on change.
@@ -103,17 +119,20 @@ bindsym $mod+Shift+Escape 	exec --no-startup-id prompt "Exit i3?" "i3-msg exit"
 # bindsym $mod+BackSpace
 bindsym $mod+Shift+BackSpace	exec --no-startup-id prompt "Reboot computer?" "$reboot"
 
-##bindsym $mod+grave
+bindsym $mod+grave		exec --no-startup-id ~/.scripts/unicode.sh
 ##bindsym $mod+asciitilde
 
 #STOP/HIDE EVERYTHING:
 bindsym $mod+Shift+Delete	exec --no-startup-id lmc truemute ; exec $truepause ; exec --no-startup-id pauseallmpv; workspace 0; exec $term -e htop ; exec $term -e ranger
 
-# #---Letter Key Bindings---# #
-bindsym $mod+q			[con_id="__focused__" instance="^(?!math|dropdown).*$"] kill
-bindsym $mod+Shift+q		[con_id="__focused__" instance="^(?!math|dropdown).*$"] kill
+# Show selection:
+bindsym $mod+Shift+Insert	exec --no-startup-id showclip
 
-bindsym $mod+w			exec --no-startup-id $BROWSER
+# #---Letter Key Bindings---# #
+bindsym $mod+q			[con_id="__focused__" instance="^(?!dropdowncalc|tmuxdd).*$"] kill
+bindsym $mod+Shift+q		[con_id="__focused__" instance="^(?!dropdowncalc|tmuxdd).*$"] kill
+
+bindsym $mod+w			exec $term -e nmtui
 bindsym $mod+Shift+w		exec --no-startup-id $BROWSER
 
 bindsym $mod+e			exec $term -e neomutt
@@ -126,21 +145,21 @@ bindsym $mod+t			split toggle
 bindsym $mod+Shift+t		gaps inner current set 15; gaps outer current set 15
 
 bindsym $mod+y			exec $term -e calcurse
-bindsym $mod+Shift+y		exec --no-startup-id "bash ~/.scripts/i3resize left"
+bindsym $mod+Shift+y		exec --no-startup-id i3resize left
 
-bindsym $mod+u			[instance="dropdown"] scratchpad show; [instance="dropdown"] move position center
-bindsym $mod+Shift+u		exec --no-startup-id "bash ~/.scripts/i3resize down"
+bindsym $mod+u			exec --no-startup-id ddspawn tmuxdd
+bindsym $mod+Shift+u		exec --no-startup-id i3resize down
 
 bindsym $mod+i 			exec $term -e htop
-bindsym $mod+Shift+i		exec --no-startup-id "bash ~/.scripts/i3resize up"
+bindsym $mod+Shift+i		exec --no-startup-id i3resize up
 
 bindsym $mod+o			sticky toggle
-bindsym $mod+Shift+o		exec --no-startup-id "bash ~/.scripts/i3resize right"
+bindsym $mod+Shift+o		exec --no-startup-id i3resize right
 
 bindsym $mod+p			exec --no-startup-id lmc toggle
 bindsym $mod+Shift+p		exec --no-startup-id lmc pause
 
-bindsym $mod+a			[instance="math"] scratchpad show; [instance="math"] move position center
+bindsym $mod+a			exec --no-startup-id ddspawn dropdowncalc -f mono:pixelsize=24
 bindsym $mod+Shift+a		exec $term -e pulsemixer
 
 bindsym $mod+s			gaps inner current plus 5
@@ -156,7 +175,7 @@ mode "$freeze" { bindsym $mod+Shift+Escape mode "default"
 bindsym $mod+f			fullscreen toggle
 bindsym $mod+Shift+f		mode "$freeze"
 
-#bindsym $mod+g			workspace prev
+bindsym $mod+g			workspace prev
 bindsym $mod+Shift+g		exec --no-startup-id gimp; workspace $ws5
 
 bindsym $mod+h			focus left
@@ -177,10 +196,10 @@ bindsym $mod+Shift+z		gaps outer current minus 5
 bindsym $mod+x			exec --no-startup-id lockscreen
 bindsym $mod+Shift+x		exec --no-startup-id prompt "Shutdown computer?" "$shutdown"
 
-bindsym $mod+c			exec --no-startup-id camtoggle
-##bindsym $mod+Shift+c
+bindsym $mod+c			exec --no-startup-id freealf
+bindsym $mod+Shift+c		exec --no-startup-id camtoggle
 
-#bindsym $mod+v			exec $term -e ncmpcpp -s visualizer
+bindsym $mod+v			exec $term -e ncmpcpp -s visualizer
 bindsym $mod+Shift+v		exec --no-startup-id projectM-pulseaudio
 
 bindsym $mod+b			bar mode toggle
@@ -203,9 +222,9 @@ bindsym $mod+Next		workspace next
 bindsym $mod+Shift+Next		move container to workspace next
 bindsym $mod+Tab		workspace back_and_forth
 bindsym $mod+XF86Back		workspace prev
-##bindsym $mod+Shift+XF86Back
+bindsym $mod+Shift+XF86Back	move container to workspace prev
 bindsym $mod+XF86Forward	workspace next
-##bindsym $mod+Shift+XF86Forward
+bindsym $mod+Shift+XF86Forward	move container to workspace next
 bindsym $mod+semicolon		workspace next
 bindsym $mod+apostrophe		split horizontal ;; exec $term
 bindsym $mod+slash		split vertical ;; exec $term
@@ -256,24 +275,6 @@ for_window [class="Gimp"] move workspace $ws5
 for_window [window_role="GtkFileChooserDialog"] resize shrink height 10 px
 for_window [title="Default - Wine desktop"] floating enable
 
-# First I have a tmux window used for background scripts.
-# I'll later bind this to mod+u.
-for_window [instance="dropdown"] floating enable
-for_window [instance="dropdown"] resize set 625 400
-for_window [instance="dropdown"] move scratchpad
-for_window [instance="dropdown"] border pixel 3
-# Runs the tmuxinit script, which searches for an earlier tmux instance,
-# otherwise starts a new one (to prevent multiple dropdown sessions).
-exec --no-startup-id $term -n dropdown -e tmuxinit
-
-# Then I have a window running R I use for basic arithmetic
-# I'll later bind this to mod+a.
-for_window [instance="math"] floating enable
-for_window [instance="math"] resize set 800 300
-for_window [instance="math"] move scratchpad
-for_window [instance="math"] border pixel 2
-exec --no-startup-id $term -n math -f mono:pixelsize=24 -e dropdowncalc
-
 # Bindings to make the webcam float and stick.
 for_window [title="mpvfloat"] floating enable
 for_window [title="mpvfloat"] sticky enable
@@ -323,8 +324,8 @@ bindsym $mod+bracketright 	exec --no-startup-id lmc forward 10
 bindsym $mod+Shift+bracketright exec --no-startup-id lmc forward 120
 
 # For screenshots and recording
-bindsym Print 			exec --no-startup-id scrot
-bindsym Shift+Print 		exec --no-startup-id scrot -u
+bindsym Print 			exec --no-startup-id flameshot gui
+bindsym Shift+Print 		exec --no-startup-id flameshot config
 bindsym $mod+Print		exec --no-startup-id dmenurecord
 bindsym $mod+Scroll_Lock	exec --no-startup-id "killall screenkey || screenkey"
 bindsym $mod+Delete		exec $stoprec
@@ -345,7 +346,7 @@ bindsym XF86PowerOff		exec --no-startup-id prompt "Shutdown computer?" "$shutdow
 ##bindsym XF86Paste		exec
 ##bindsym XF86Cut		exec
 ##bindsym XF86MenuKB		exec
-bindsym XF86Calculator		exec $term -e R -q
+bindsym XF86Calculator		exec $term -e R -q --no-save
 ##bindsym XF86Sleep		This binding is typically mapped by systemd automatically.
 ##bindsym XF86WakeUp		exec
 bindsym XF86Explorer		exec $term -e ranger
@@ -370,7 +371,7 @@ bindsym XF86AudioRewind		exec --no-startup-id lmc back 10
 bindsym XF86AudioForward	exec --no-startup-id lmc forward 10
 ##bindsym XF86Phone		exec
 ##bindsym XF86Tools		exec
-bindsym XF86HomePage		exec $BROWSER https://lukesmith.xyz
+bindsym XF86HomePage		exec $BROWSER https://allbombson.pw
 bindsym XF86Reload		restart
 ##bindsym XF86ScrollUp		exec
 ##bindsym XF86ScrollDown		exec
@@ -404,8 +405,8 @@ bindsym XF86MonBrightnessUp	exec --no-startup-id xbacklight -inc 15
 bindsym XF86AudioMedia		exec --no-startup-id $term -e ncmpcpp
 bindsym XF86Display		exec --no-startup-id arandr
 #bindsym XF86KbdLightOnOff	exec
-bindsym XF86KbdBrightnessDown	exec --no-startup-id python3.6 ~/.scripts/kb-lights.py -
-bindsym XF86KbdBrightnessUp	exec --no-startup-id python3.6 ~/.scripts/kb-lights.py +
+#bindsym XF86KbdBrightnessDown	exec
+#bindsym XF86KbdBrightnessUp	exec
 ##bindsym XF86Reply		exec
 ##bindsym XF86MailForward	exec
 ##bindsym XF86Save		exec
@@ -413,34 +414,13 @@ bindsym XF86Documents		exec $term -e ranger ~/Documents
 ##bindsym XF86Battery		exec
 ##bindsym XF86Bluetooth		exec
 bindsym XF86WLAN		exec $netrefresh
-#exec_always --no-startup-id notify-send -i ~/.scripts/larbs.png '<b>Welcome to LARBS:</b> Press Super+F1 for the manual.' -t 10000
-
-
-#---( windows rules )---#
-
-# No border windows
-for_window [class="(?i)terminator"] border none 
-for_window [class="(?i)terminology"] border none 
-for_window [class="(?i)dwb"] border none 
-for_window [class="(?i)luakit"] border none 
-for_window [class="(?i)rambox"] border none 
-for_window [class="(?i)franz"] border none 
-for_window [class="(?i)firefox"] border none
-for_window [class="(?i)iceweasel"] border none 
-for_window [class="(?i)jetbrains"] border none
-for_window [class="(?i)kontact"] border none
-for_window [class="(?i)kmail"] border none
-#for_window [class="(?i)emacs"] border none
-for_window [class="(?i)chrom"] border none
-for_window [class="(?i)gvim"] border none
-for_window [class="(?i)vivaldi"] border none
 
 # Float by name
 for_window [title="Nitrogen"] floating enable
 for_window [title="Install user style"] floating enable
 for_window [title="KCalc"] floating enable
 for_window [class="plasmashell"] floating enable
-
+for_window [class="Impactor"] floating enable
 
 # Float by type
 for_window [window_role="pop-up"] floating enable
@@ -451,23 +431,15 @@ for_window [window_type="menu"] floating enable
 # Use Mouse+$mod to drag floating windows to their wanted position
 floating_modifier $mod
 
-# split in horizontal orientation
-bindsym $mod+g split h
-
-# split in vertical orientation
-bindsym $mod+v split v
-
-#bindsym t exec termite; mode "default"
-
-#hide_edge_borders both
-#border none
+#Removes Border
 default_border none
 
-
+# Resizing windows by 1 in i3 using keyboard only
 bindsym $mod+Ctrl+Right resize shrink width 1 px or 1 ppt
 bindsym $mod+Ctrl+Up resize grow height 1 px or 1 ppt
 bindsym $mod+Ctrl+Down resize shrink height 1 px or 1 ppt
 bindsym $mod+Ctrl+Left resize grow width 1 px or 1 ppt
+
 
 # Resizing windows by 10 in i3 using keyboard only
 bindsym $mod+Ctrl+Shift+Right resize shrink width 10 px or 10 ppt
@@ -475,8 +447,7 @@ bindsym $mod+Ctrl+Shift+Up resize grow height 10 px or 10 ppt
 bindsym $mod+Ctrl+Shift+Down resize shrink height 10 px or 10 ppt
 bindsym $mod+Ctrl+Shift+Left resize grow width 10 px or 10 ppt
 
-bindsym $mod+* border pixel 20
-
-#for_window [class="dolphin"] floating enable
-
-bindsym $mod+Ctrl+Shift+F exec xprop | grep WM_CLASS
+#Floating Patches and WIndow Moving
+for_window [window_role="pop-up"] floating enable
+for_window [window_role="task_dialog"] floating enable
+for_window [class="Spotify"] move to workspace $ws10
