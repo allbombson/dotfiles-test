@@ -10,44 +10,7 @@ HISTSIZE= HISTFILESIZE= # Infinite history.
 
 export GPG_TTY=$(tty)
 
-# System Maintainence
-alias mw="~/.config/mutt/mutt-wizard.sh"
-alias muttwizard="~/.config/mutt/mutt-wizard.sh"
-alias sdn="sudo shutdown now"
-alias psref="gpg-connect-agent RELOADAGENT /bye" # Refresh gpg
 
-# Some aliases
-alias p="sudo pacman"
-alias SS="sudo systemctl"
-alias v="vim"
-alias sv="sudo vim"
-alias r="ranger"
-alias sr="sudo ranger"
-alias ka="killall"
-alias g="git"
-alias trem="transmission-remote"
-alias mkd="mkdir -pv"
-alias ref="shortcuts.sh && source ~/.bashrc" # Refresh shortcuts manually and reload bashrc
-alias bw="wal -i ~/.config/wall.png" # Rerun pywal
-alias pi="bash ~/.larbs/wizard/wizard.sh"
-
-# Adding color
-alias ls='ls -hN --color=auto --group-directories-first'
-alias grep="grep --color=auto" # Color grep - highlight desired sequence.
-alias ccat="highlight --out-format=ansi" # Color cat - print file with syntax highlighting.
-
-# Internet
-alias yt="youtube-dl --add-metadata -ic" # Download video link
-alias yta="yt -x -f bestaudio/best" # Download only audio
-alias YT="youtube-viewer"
-alias ethspeed="speedometer -r enp0s25"
-alias wifispeed="speedometer -r wlp3s0"
-alias starwars="telnet towel.blinkenlights.nl"
-
-# TeX
-alias Txa="cp ~/Documents/LaTeX/article.tex"
-alias Txs="cp ~/Documents/LaTeX/beamer.tex"
-alias Txh="cp ~/Documents/LaTeX/handout.tex"
 
 source ~/.shortcuts
 
@@ -127,7 +90,7 @@ ZSH_THEME="tarbs"
 # DISABLE_AUTO_TITLE="true"
 
 # Uncomment the following line to enable command auto-correction.
-# ENABLE_CORRECTION="true"
+ENABLE_CORRECTION="true"
 
 # Uncomment the following line to display red dots whilst waiting for completion.
 # COMPLETION_WAITING_DOTS="true"
@@ -155,6 +118,8 @@ ZSH_THEME="tarbs"
 # Add wisely, as too many plugins slow down shell startup.
 plugins=(
   git
+  sudo
+  
 )
 
 source $ZSH/oh-my-zsh.sh
@@ -190,10 +155,66 @@ source $ZSH/oh-my-zsh.sh
 
 #before anything shit
 
-
-
+#Set a backup PROMPT
+PROMPT="$fg_bold[red][$fg_bold[yellow]%n$fg_bold[green]@$fg_bold[blue]%m $fg_bold[magenta]%1~$fg_bold[red]]$fg_bold[white]$%{$reset_color%} "
 #powerline set to dev null so if not installed there are no errors
 . /usr/lib/python3.7/site-packages/powerline/bindings/zsh/powerline.zsh > /dev/null
+
+#Shortcuts
+# System Maintainence
+
+alias mw="~/.config/mutt/mutt-wizard.sh"
+alias muttwizard="~/.config/mutt/mutt-wizard.sh"
+alias sdn="sudo shutdown now"
+alias psref="gpg-connect-agent RELOADAGENT /bye" # Refresh gpg
+
+
+
+# Some aliases
+
+alias p="sudo pacman"
+alias SS="sudo systemctl"
+alias v="vim"
+alias sv="sudo vim"
+alias r="ranger"
+alias sr="sudo ranger"
+alias ka="killall"
+alias g="git"
+alias trem="transmission-remote"
+alias mkd="mkdir -pv"
+alias ref="shortcuts.sh && source ~/.bashrc" # Refresh shortcuts manually and reload bashrc
+alias bw="wal -i ~/.config/wall.png" # Rerun pywal
+alias pi="bash ~/.larbs/wizard/wizard.sh"
+
+
+
+# Adding color
+
+alias ls='ls -hN --color=auto --group-directories-first'
+alias grep="grep --color=auto" # Color grep - highlight desired sequence.
+alias ccat="highlight --out-format=ansi" # Color cat - print file with syntax highlighting.
+
+
+
+# Internet
+
+alias yt="youtube-dl --add-metadata -ic" # Download video link
+alias yta="yt -x -f bestaudio/best" # Download only audio
+alias YT="youtube-viewer"
+alias ethspeed="speedometer -r enp0s25"
+alias wifispeed="speedometer -r wlp3s0"
+alias starwars="telnet towel.blinkenlights.nl"
+
+
+
+# TeX
+
+alias Txa="cp ~/Documents/LaTeX/article.tex"
+alias Txs="cp ~/Documents/LaTeX/beamer.tex"
+alias Txh="cp ~/Documents/LaTeX/handout.tex"
+
+
+
 
 
 #funcs
