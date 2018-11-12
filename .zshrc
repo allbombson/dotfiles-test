@@ -3,7 +3,7 @@
 stty -ixon # Disable ctrl-s and ctrl-q.
 
 #shopt gives errors
-#shopt -s autocd #Allows you to cd into directory merely by typing the directory name.
+shopt -s autocd &>/dev/null #Allows you to cd into directory merely by typing the directory name.
 
 HISTSIZE= HISTFILESIZE= # Infinite history.
 
