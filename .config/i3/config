@@ -119,7 +119,7 @@ bindsym $mod+Shift+Escape 	exec --no-startup-id prompt "Exit i3?" "i3-msg exit"
 # bindsym $mod+BackSpace
 bindsym $mod+Shift+BackSpace	exec --no-startup-id prompt "Reboot computer?" "$reboot"
 
-bindsym $mod+grave		exec --no-startup-id ~/.scripts/unicode.sh
+bindsym $mod+grave		exec --no-startup-id ~/.scripts/unicode
 ##bindsym $mod+asciitilde
 
 #STOP/HIDE EVERYTHING:
