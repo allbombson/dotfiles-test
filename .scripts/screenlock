@@ -1,0 +1,31 @@
+#!/bin/sh
+#OG code by luke smith edited by Thomas Lane
+
+#Remove Lock Screen IMG & Base IMG
+rm -f /tmp/locked.png
+rm -f /tmp/base.png
+
+# If `imagemagick` is not installed, use a blank screen.
+[ -f /usr/bin/convert ] &&
+#Take a screenshot and Save as base.png
+scrot -m -z /tmp/base.png &&
+#Send notify that computer is locking
+pgrep -x dunst && notify-send -i ~/.scripts/lock.png "Locking computer..." &&
+
+#Add a blur to the base img and save as locked.png
+convert /tmp/base.png -blur 0x8 /tmp/locked.png
+
+#Add a Lock img to locked.png (can be done in one command but I perfer 2 for debuging
+convert /tmp/locked.png ~/.scripts/lock.png -gravity center -composite -matte /tmp/locked.png
+
+# Pause music (mocp, mpd and send the pause key to all mpv videos):
+mocp -P >/dev/null 2>&1
+mpc pause >/dev/null 2>&1
+pauseallmpv >/dev/null 2>&1
+
+
+#Lock the computer
+i3lock -e -f -c 000000 -i /tmp/locked.png
+
+# In sixty seconds, turn off display unless key press in last 30 seconds.
+sleep 60 && [ 30000 -lt "$(xssstate -i)" ] &&  pgrep -x i3lock && xset dpms force off
