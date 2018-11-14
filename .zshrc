@@ -156,7 +156,7 @@ source $ZSH/oh-my-zsh.sh
 #before anything shit
 
 #Set a backup PROMPT
-PROMPT="$fg_bold[red][$fg_bold[yellow]%n$fg_bold[green]@$fg_bold[blue]%m $fg_bold[magenta]%1~$fg_bold[red]]$fg_bold[white]$%{$reset_color%} "
+PROMPT="%{$fg_bold[red]%}[%{$fg_bold[yellow]%}%n%{$fg_bold[green]%}@%{$fg_bold[blue]%}%m %{$fg_bold[magenta]%}%1~%{$fg_bold[red]%}]%{$fg_bold[white]%}$%{$reset_color%} "
 #powerline set to dev null so if not installed there are no errors
 . /usr/lib/python3.7/site-packages/powerline/bindings/zsh/powerline.zsh &>/dev/null
 
