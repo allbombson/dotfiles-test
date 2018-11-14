@@ -119,7 +119,6 @@ ENABLE_CORRECTION="true"
 plugins=(
   git
   sudo
-  
 )
 
 source $ZSH/oh-my-zsh.sh
