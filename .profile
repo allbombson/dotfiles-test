@@ -33,4 +33,4 @@ export LESS_TERMCAP_ue=$'\E[0m'        # reset underline
 sudo -n loadkeys ~/.scripts/ttymaps.kmap 2>/dev/null
 
 
-source .bashrc
+
